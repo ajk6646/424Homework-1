@@ -74,12 +74,12 @@ public:
                 at_SCE = 1;
 
                 swap(origin, destination);
-                pos = 0.0;
+                pos = 0;
             }
             else
             {
                 swap(origin, destination);
-                pos = 0.0;
+                pos = 0;
             }
         }
     }
@@ -88,11 +88,13 @@ public:
         return pos;
     }
 
-    std::string getOrigin() {
+    std::string getOrigin() 
+    {
         return origin;
     }
 
-    std::string getDestination() {
+    std::string getDestination() 
+    {
         return destination;
     }
 
@@ -101,15 +103,18 @@ public:
         return distance;
     }
 
-    bool isAtSCE() {
+    bool isAtSCE() 
+    {
         return at_SCE;
     }
 
-    double getVel() {
+    double getVel() 
+    {
         return vel;
     }
 
-    void setVel(double velocity) {
+    void setVel(double velocity) 
+    {
         vel = velocity;
     }
 };
@@ -121,7 +126,7 @@ int main()
 
     /*----------------------------------------------------------Question 1---------------------------------------------------------------*/
        // defining variables (units are commented afterwards)
-    double EmptyWeight, usableFuelPerGallon, baggageWeight; //Pounds
+    double EmptyWeight, usableFuelPerGallon, BaggageWeight; //Pounds
     int FrontSeat, RearSeat; //Unitless
     double EmptyWeightMoment; //Pounds-inches
     double FrontSeatMomentArm, RearSeatMomentArm, FuelMomentArm, BaggageMomentArm; //Inches
@@ -130,40 +135,17 @@ int main()
     double maxGrossWeight = 2950;  //Pounds
     double forwardCGLim = 82.1;  //Inches
     double aftCGLLim = 84.7; //inches
-
+//have user enter the known values 
     cout << "Enter airplane empty weight (pounds): ";
     cin >> EmptyWeight;
     cout << "Enter airplane empty-weight moment (pounds-inches): ";
     cin >> EmptyWeightMoment;
     cout << "Enter number of front seat occupants: ";
     cin >> FrontSeat;
-
-    // Array to store weights of front seat occupants
-    vector<double> frontSeatWeights(FrontSeat);
-    double totalFrontWeight = 0;
-
-    for (int i = 0; i < FrontSeat; ++i) {
-        std::string iString = std::to_string(i + 1);
-        cout << "Enter weight of front seat occupant " + iString + " (pounds): ";
-        cin >> frontSeatWeights[i];
-        totalFrontWeight = totalFrontWeight + frontSeatWeights[i];
-    }
-
     cout << "Enter front seat moment arm (inches): ";
     cin >> FrontSeatMomentArm;
     cout << "Enter number of rear seat occupants: ";
     cin >> RearSeat;
-
-    // Array to store weights of rear seat occupants
-    vector<double> rearSeatWeights(RearSeat);
-    double totalRearWeight = 0;
-    for (int i = 0; i < RearSeat; ++i) {
-        std::string iString = std::to_string(i + 1);
-        cout << "Enter weight of each rear seat occupant " + iString + " (pounds): ";
-        cin >> rearSeatWeights[i];
-        totalRearWeight = totalRearWeight + rearSeatWeights[i];
-    }
-
     cout << "Enter rear seat moment arm (inches): ";
     cin >> RearSeatMomentArm;
     cout << "Enter number of gallons of usable fuel: ";
@@ -173,65 +155,82 @@ int main()
     cout << "Enter fuel tank moment arm (inches): ";
     cin >> FuelMomentArm;
     cout << "Enter baggage weight (pounds): ";
-    cin >> baggageWeight;
+    cin >> BaggageWeight;
     cout << "Enter baggage moment arm (inches): ";
     cin >> BaggageMomentArm;
 
+// array to store weights of front seat 
+    vector<double> FrontSeatWeights(FrontSeat);
+    double totalFrontWeight = 0;
+
+    for (int i = 0; i < FrontSeat; ++i) {
+        std::string iString = std::to_string(i + 1);
+        cout << "Enter weight of front seat occupant " + iString + " (pounds): ";
+        cin >> FrontSeatWeights[i];
+        totalFrontWeight = totalFrontWeight + FrontSeatWeights[i];
+    }
+
+// array to store weights of rear seat occupants
+    vector<double> RearSeatWeights(RearSeat);
+    double totalRearWeight = 0;
+    for (int i = 0; i < RearSeat; ++i) {
+        std::string iString = std::to_string(i + 1);
+        cout << "Enter weight of each rear seat occupant " + iString + " (pounds): ";
+        cin >> RearSeatWeights[i];
+        totalRearWeight = totalRearWeight + RearSeatWeights[i];
+    }
+
     double usableFuelWeight = UsableFuel * usableFuelPerGallon;
-
-
-    double totalWeight = EmptyWeight + totalFrontWeight + totalRearWeight + usableFuelWeight + baggageWeight;
-
-    double totalMoment = EmptyWeightMoment + totalFrontWeight * FrontSeatMomentArm + totalRearWeight * RearSeatMomentArm
-        + usableFuelWeight * FuelMomentArm + baggageWeight * BaggageMomentArm;
+    double TotalWeight = EmptyWeight + totalFrontWeight + totalRearWeight + usableFuelWeight + BaggageWeight;
+    double TotalMoment = EmptyWeightMoment + totalFrontWeight * FrontSeatMomentArm + totalRearWeight * RearSeatMomentArm
+        + usableFuelWeight * FuelMomentArm + BaggageWeight * BaggageMomentArm;
 
     cout << "\n";
 
-    if (totalWeight > maxGrossWeight || totalMoment < forwardCGLim || totalMoment > aftCGLLim) {
-        double fuelAdjustment = 0.0;
+    if (totalWeight > maxGrossWeight || totalMoment < forwardCGLim || totalMoment > aftCGLLim) 
+    {
+        double FuelAdjustment = 0.0;
 
         cout << "The aircraft is out of design limits.\n";
-        cout << "The old total weight was (pounds): " << fixed << setprecision(2) << totalWeight << endl;
-        cout << "The old C.G. location  was (inches): " << fixed << setprecision(2) << totalMoment / totalWeight << endl;
+        cout << "The old total weight was (pounds): " << fixed << setprecision(2) << TotalWeight << endl;
+        cout << "The old C.G. location  was (inches): " << fixed << setprecision(2) << TotalMoment / TotalWeight << endl;
         cout << "\n";
-        if (totalWeight > maxGrossWeight) {
-            fuelAdjustment = (totalWeight - maxGrossWeight) / usableFuelPerGallon;
+        if (totalWeight > maxGrossWeight) 
+        {
+            FuelAdjustment = (TotalWeight - maxGrossWeight) / usableFuelPerGallon;
         }
-        double newGrossWeight = totalWeight - fuelAdjustment * usableFuelPerGallon;
-        double newCGLocation = totalMoment / newGrossWeight;
+        double newGrossWeight = TotalWeight - FuelAdjustment * usableFuelPerGallon;
+        double newCGLocation = TotalMoment / newGrossWeight;
 
         cout << "The aircraft new design limits are as follows.\n";
-        cout << "Required fuel adjustment (gallons): " << fixed << setprecision(2) << fuelAdjustment << endl;
+        cout << "Required fuel adjustment (gallons): " << fixed << setprecision(2) << FuelAdjustment << endl;
         cout << "New gross weight (punds): " << fixed << setprecision(2) << newGrossWeight << endl;
         cout << "New C.G. location (inches): " << fixed << setprecision(2) << newCGLocation << endl;
     }
-    else {
+    else 
+    {
         cout << "The aircraft is within design limits.\n";
-        cout << "Gross weight (pounds): " << fixed << setprecision(2) << totalWeight << endl;
-        cout << "C.G. location (inches): " << fixed << setprecision(2) << totalMoment / totalWeight << endl;
+        cout << "Gross weight (pounds): " << fixed << setprecision(2) << TotalWeight << endl;
+        cout << "C.G. location (inches): " << fixed << setprecision(2) << TotalMoment / TotalWeight << endl;
     }
 
-
-
     /*---------------------------------------------------Question 2-------------------------------------------------------------------*/
-    std::map<std::pair<std::string, std::string>, int> flightDistances;
+    std::map<std::pair<std::string, std::string>, int> flightDistance;
 
     // Each flight distance dictated from the map
-    flightDistances[{"SCE", "PHL"}] = 160;
-    flightDistances[{"SCE", "ORD"}] = 640;
-    flightDistances[{"SCE", "EWR"}] = 220;
-
-
+    flightDistance[{"SCE", "PHL"}] = 160;
+    flightDistance[{"SCE", "ORD"}] = 640;
+    flightDistance[{"SCE", "EWR"}] = 220;
 
     /*---------------------------------------------------Question 5------------------------------------------------------------------*/
-
     std::string from;
     std::string to;
+    // have user input where they're flying to and from 
     cout << "Please enter a starting airport(SCE, EWR, PHL, or ORD):  ";
     cin >> from;
     cout << "Please enter a destination airport(SCE, EWR, PHL, or ORD): ";
     cin >> to;
-    Plane plane(from, to, flightDistances);
+    Plane plane(from, to, flightDistance);
 
     double placeHolder = 0;
     cout << "Please enter a flight speed: (mph) ";
@@ -245,7 +244,8 @@ int main()
     double position = 0.0;
     int time = 0;
     double distance = plane.getDistance();
-    for (int i = 0; i < iterations; ++i) {
+    for (int i = 0; i < iterations; ++i) 
+    {
         if (distance - position > 0)
         {
             plane.operate(timestep);
@@ -348,23 +348,24 @@ void Pilot::controlPlane(double timestep, int maxIterations)
 
 int main()
     {
-        Plane plane("SCE", "PHL", 450);
-
+        Plane ("SCE", "PHL", 450);
         std::shared_ptr<Pilot> pilot1 = std::make_shared<Pilot>("Pilot-in-Command", &plane);
         std::shared_ptr<Pilot> pilot2 = std::make_shared<Pilot>("Co-Pilot", &plane);
-
+// values gotten from question 5
         double timestep = 50;
-        int maxIterations = 10; // should be 1000 as in question 5, reduced for easier/smoother tests of code
+        int maxIterations = 1000; 
 
-        while (true) {
+        while (true) 
+        {
+        // Pilot in Command flies plane to destination and back to SCE
             pilot1->controlPlane(timestep, maxIterations);
             std::cout << "Plane is at SCE" << std::endl;
-
+        // Co-Pilot flies plane to destination and back to SCE
             pilot2->controlPlane(timestep, maxIterations);
             std::cout << "Plane is at SCE" << std::endl;
 
             plane = Plane("SCE", "PHL", 450);
-
+        // swap pilots
             std::swap(pilot1, pilot2);
 
         }
@@ -462,23 +463,24 @@ void Pilot::controlPlane(double timestep, int maxIterations)
 int main()
     {
         auto plane = std::make_shared<Plane>("SCE", "PHL", 450);
-
         auto pilot1 = std::make_shared<Pilot>("Pilot-in-Command", plane);
         auto pilot2 = std::make_shared<Pilot>("Co-Pilot", plane);
+// values used from question 5
+        double timestep = 50; 
+        int maxIterations = 1000; 
 
-        double timestep = 50;
-        int maxIterations = 10; // should be 1000 as in question 5, reduced for easier/smoother tests of code
 
-
-        while (true) {
+        while (true) 
+        {
+            // Pilot in Command flies plane to destination and back to SCE
             pilot1->controlPlane(timestep, maxIterations);
             std::cout << "Plane is at SCE" << std::endl;
-
+            // Co-Pilot flies plane to destination and back to SCE
             pilot2->controlPlane(timestep, maxIterations);
             std::cout << "Plane is at SCE" << std::endl;
 
             plane = std::make_shared<Plane>("SCE", "PHL", 450);
-
+            // switch pilots
             std::swap(pilot1, pilot2);
 
         }
